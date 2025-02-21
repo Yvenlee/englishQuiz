@@ -46,7 +46,7 @@ if st.session_state.quiz_ready:
     st.subheader(f"🔤 Quelle est la traduction de **'{st.session_state.word}'** en français ?")
 
     user_choice = st.radio(
-        "Sélectionnez votre réponse :", 
+        "Sélectionnez votre réponse:", 
         st.session_state.choices, 
         index=None, 
         horizontal=True
@@ -65,6 +65,3 @@ if st.session_state.quiz_ready:
             st.error(f"❌ Mauvaise réponse. La bonne réponse était : **{st.session_state.correct_answer}**.")
 
     st.markdown(f"<h3 style='text-align: center;'>🌟 Score : {st.session_state.score}</h3>", unsafe_allow_html=True)
-
-    if st.session_state.validated:
-        st.button("🔄 Nouvelle question", use_container_width=True, key="new_question_after_validation", on_click=lambda: generate_question(st.session_state.category))
