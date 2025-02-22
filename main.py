@@ -2,7 +2,6 @@ import streamlit as st
 import json
 import random
 
-# Charger le fichier JSON
 with open("data.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -20,7 +19,7 @@ def generate_question(category):
     
     words = [word for word in data[category].keys() if word not in st.session_state.answered_correctly]
     
-    if not words:  # Si toutes les questions ont été correctement répondues, réinitialiser
+    if not words:
         st.session_state.answered_correctly = {}
         words = list(data[category].keys())
     
@@ -53,9 +52,9 @@ def reset_quiz():
         "validated": False,
         "answered_correctly": {}
     })
-    generate_question(st.session_state.category)  # Générer une nouvelle question après reset
+    generate_question(st.session_state.category)
 
-st.markdown("<h1 style='text-align: center;'>📝 Apprentissage de l'anglais</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>📝 Améliorer le vocabulaire</h1>", unsafe_allow_html=True)
 
 new_category = st.selectbox("📚 Choisissez une catégorie :", categories, index=categories.index(st.session_state.category) if st.session_state.category in categories else 0)
 
@@ -90,7 +89,7 @@ if st.session_state.quiz_ready and st.session_state.question_count < 10:
         else:
             st.error(f"❌ Mauvaise réponse. La bonne réponse était : **{st.session_state.correct_answer}**.")
 
-    st.markdown(f"<h3 style='text-align: center;'>🌟 Score : {st.session_state.score} / 10</h3>", unsafe_allow_html=True)
+    st.markdown(f"<h3 style='text-align: center;'>🌟 Score : {st.session_state.score} / 10 | Questions : {st.session_state.question_count} / 10</h3>", unsafe_allow_html=True)
 
 if st.session_state.question_count >= 10:
     st.warning("📌 Vous avez atteint la limite de 10 questions.")
