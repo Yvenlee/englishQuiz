@@ -26,7 +26,6 @@ def generate_question(category):
     word = random.choice(words)
     correct_answer = data[category][word]
 
-    # Générer 2 mauvaises réponses aléatoires
     all_answers = list(data[category].values())
     all_answers.remove(correct_answer)
     wrong_answers = random.sample(all_answers, min(2, len(all_answers)))
@@ -50,7 +49,6 @@ def reset_quiz():
         "question_count": 0,
         "quiz_ready": False,
         "validated": False,
-        "answered_correctly": {}
     })
     generate_question(st.session_state.category)
 
