@@ -2,6 +2,7 @@ import streamlit as st
 import json
 import random
 
+# Charger les données
 with open("data.json", "r", encoding="utf-8") as f:
     data = json.load(f)
 
@@ -52,9 +53,16 @@ def reset_quiz():
     })
     generate_question(st.session_state.category)
 
-st.markdown("<h1 style='text-align: center; font-size: 24px;'>📝 Améliorer le vocabulaire</h1>", unsafe_allow_html=True)
+# Titre principal avec style HTML
+st.markdown("<h1 style='text-align: center; font-size: 36px; color: #4CAF50;'>📝 Améliorer le vocabulaire</h1>", unsafe_allow_html=True)
 
-new_category = st.selectbox("📚 Choisissez une catégorie :", categories, index=categories.index(st.session_state.category) if st.session_state.category in categories else 0)
+new_category = st.selectbox(
+    "📚 Choisissez une catégorie :", 
+    categories, 
+    index=categories.index(st.session_state.category) if st.session_state.category in categories else 0,
+    help="Choisissez une catégorie pour démarrer votre quiz",
+    key="category_select"
+)
 
 if new_category != st.session_state.category:
     st.session_state.category = new_category
@@ -64,15 +72,17 @@ if st.button("🔄 Nouvelle question", use_container_width=True, key="new_questi
     generate_question(st.session_state.category)
 
 if st.session_state.quiz_ready and st.session_state.question_count < 10:
-    st.subheader(f"🔤 Quelle est la traduction de **'{st.session_state.word}'** en français ?")
-
+    st.markdown(f"<h2 style='text-align: center; font-size: 24px; color: #fff;'>🔤 Quelle est la traduction de <strong>'{st.session_state.word}'</strong> en français ?</h2>", unsafe_allow_html=True)
+    
     user_choice = st.radio(
-        "Sélectionnez votre réponse:", 
+        "Sélectionnez votre réponse :", 
         st.session_state.choices, 
         index=None, 
-        horizontal=True
+        horizontal=True,
+        key="answer_options"
     )
 
+    # Bouton de validation
     validate_button = st.button("✅ Valider", use_container_width=True, key="validate_button", disabled=user_choice is None)
 
     if validate_button and user_choice:
@@ -83,12 +93,14 @@ if st.session_state.quiz_ready and st.session_state.question_count < 10:
         if user_choice == st.session_state.correct_answer:
             st.session_state.score += 1
             st.session_state.answered_correctly[st.session_state.word] = True
-            st.success("✅ Bonne réponse !")
+            st.success("✅ Bonne réponse !", icon="✔️")
         else:
-            st.error(f"❌ Mauvaise réponse. La bonne réponse était : **{st.session_state.correct_answer}**.")
+            st.error(f"❌ Mauvaise réponse. La bonne réponse était : **{st.session_state.correct_answer}**.", icon="❌")
 
+    # Afficher le score et le nombre de questions
     st.markdown(f"<h3 style='text-align: center; font-size: 18px;'>🌟 Score : {st.session_state.score} / 10 | Questions : {st.session_state.question_count} / 10</h3>", unsafe_allow_html=True)
 
+# Fin du quiz
 if st.session_state.question_count >= 10:
     st.warning("📌 Vous avez atteint la limite de 10 questions.")
     if st.button("🔁 Recommencer", use_container_width=True, key="restart_button"):
